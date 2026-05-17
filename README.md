@@ -26,13 +26,13 @@ Works with:
 - **Human takeover when the web gets brittle.** noVNC keeps the same live session available when a person needs to step in.
 - **Login once, reuse later.** Save named auth profiles and reopen fresh sessions that are already signed in.
 - **Local-first by default.** Run the full stack on your own box with Docker Compose, or use Codespaces for a quick hosted demo.
-- **Safety rails built in.** Approvals, operator identity, PII scrubbing, Witness receipts, and compliance templates are all part of the product surface.
-- **Governed skill induction.** Experimental convergence runs can turn verified browser traces into staged skill candidates without bypassing review.
+- **Safety rails built in.** Approvals, operator identity, PII scrubbing, Witness receipts, and policy presets are all part of the product surface.
+- **Governed skill induction.** Verified browser traces can become staged skill candidates with signed provenance, verifier adapters, and review-only graduation — agents that prove they can repeat themselves correctly, not just act once.
 
 ## Release Highlights (v1.1.0)
 
 - **Modular controller architecture** splits the app factory, routers, middleware, browser services, action pipeline, and MCP tool packs without changing the public API.
-- **Agent skill induction foundation** keeps the governed Stage 0 harness: contracts, tamper-checked traces, verifier adapters, staged skill candidates, signed provenance, and review-only graduation.
+- **Agent skill induction foundation** ships the governed Stage 0 harness: contracts, tamper-checked traces, verifier adapters, staged skill candidates, signed provenance, and review-only graduation.
 - **MCP-native operations** add tool annotations, resource listing/subscriptions, harness candidate tools, per-tool metrics, and response metadata for better agent planning.
 - **Skill drift monitoring** lets operators re-check staged skills and mark degraded candidates when their verifier no longer passes.
 - **Release-grade hardening** improves route failure logging, tool descriptor caching, deep health packaging, router startup behavior, and artifact path trust.
@@ -49,7 +49,6 @@ See [CHANGELOG.md](./CHANGELOG.md) for the full release history.
 
 ## Not the Goal
 
-- stealth or anti-bot work
 - CAPTCHA solving
 - unauthorized scraping or account automation
 - deceptive identity shaping or bypass tooling
@@ -161,7 +160,9 @@ Client setup guides:
 
 ## Convergence Harness
 
-Auto Browser includes an experimental Stage 0 convergence harness for Agent Skill Induction. It runs a structured task contract, records tamper-checked traces, verifies completion, and writes a staged skill candidate with provenance. It does not promote generated skills into production automatically.
+Auto Browser ships a Stage 0 convergence harness for Agent Skill Induction. It runs a structured task contract, records tamper-checked traces, verifies completion, and writes a staged skill candidate with signed provenance. Generated skills are staged only — promotion stays explicit and reviewed.
+
+Read-only inspection tools (`harness.list_runs`, `harness.get_status`, `harness.get_trace`) are exposed in the default `curated` MCP tool profile so agents can introspect harness state without elevated access. Convergence runs, drift checks, candidate management, and graduation require `MCP_TOOL_PROFILE=full`, or can be invoked directly over REST.
 
 Start with [`docs/convergence-harness.md`](./docs/convergence-harness.md). A deterministic local smoke is:
 
@@ -188,19 +189,17 @@ STEALTH_ENABLED=false
 
 `COMPLIANCE_TEMPLATE` can apply a preconfigured posture at startup:
 
-| Template | Auth Encryption | Operator ID | PII Scrub | Isolation | Max Session Age |
+| Preset | Auth Encryption | Operator ID | PII Scrub | Isolation | Max Session Age |
 | --- | --- | --- | --- | --- | --- |
-| `HIPAA` | required | required | all layers | `docker_ephemeral` | 4h |
-| `PCI-DSS` | required | required | all layers | `docker_ephemeral` | 1h |
-| `SOC2` | - | required | network + text | shared | 24h |
-| `GDPR` | - | - | all layers | shared | 24h |
+| `strict` | required | required | all layers | `docker_ephemeral` | 4h |
+| `balanced` | - | required | network + text | shared | 24h |
 
-All templates require upload approvals. `HIPAA`, `SOC2`, and `PCI-DSS` also enable Witness receipts. Startup writes the applied policy to `/data/compliance-manifest.json`.
+Both presets require upload approvals and enable Witness receipts. Startup writes the applied policy to `/data/compliance-manifest.json`. The legacy names (`HIPAA`, `SOC2`, `GDPR`, `PCI-DSS`) still work as deprecated aliases and emit a warning at startup.
 
 Example:
 
 ```bash
-COMPLIANCE_TEMPLATE=HIPAA docker compose up
+COMPLIANCE_TEMPLATE=strict docker compose up
 ```
 
 For deployment details, hosted Witness notes, CLI auth modes, and reverse-SSH guidance, see:
@@ -275,6 +274,4 @@ If you want to help, start with:
 - [`docs/good-first-issues.md`](./docs/good-first-issues.md)
 - [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md)
 
-Tips moved to [`TIPS.md`](./TIPS.md).
-
-If Auto Browser is useful, a star helps other people find it.
+If Auto Browser is useful, a star helps other people find it. Sponsorship and tip options live in [`TIPS.md`](./TIPS.md).

@@ -14,7 +14,7 @@ from .app_factory import (
     create_controller_app,
     install_controller_host_middleware,
 )
-from .compliance import VALID_TEMPLATES, apply_compliance_template, write_compliance_manifest
+from .compliance import apply_compliance_template, write_compliance_manifest
 from .config import get_settings
 from .middleware import install_controller_http_middleware
 from .routes.agent import create_agent_router
@@ -30,21 +30,20 @@ _log_level = getattr(logging, os.environ.get("LOG_LEVEL", "INFO").upper(), loggi
 logging.basicConfig(level=_log_level)
 logger = logging.getLogger(__name__)
 
-_VERSION = "1.1.0"
+_VERSION = "1.1.1"
 
 def _install_controller_host_middleware(application: FastAPI, allowed_hosts: list[str]) -> None:
     install_controller_host_middleware(application, allowed_hosts)
 
 
 settings = get_settings()
-_compliance_template = settings.compliance_template.upper().strip() if settings.compliance_template else None
+_compliance_template = settings.compliance_template.strip() if settings.compliance_template else None
 _compliance_overrides: dict[str, object] | None = None
 if _compliance_template:
-    if _compliance_template not in VALID_TEMPLATES:
-        raise RuntimeError(
-            f"Invalid COMPLIANCE_TEMPLATE={_compliance_template!r}. Valid: {sorted(VALID_TEMPLATES)}"
-        )
-    _compliance_overrides = apply_compliance_template(settings, _compliance_template)
+    try:
+        _compliance_overrides = apply_compliance_template(settings, _compliance_template)
+    except ValueError as exc:
+        raise RuntimeError(f"Invalid COMPLIANCE_TEMPLATE={_compliance_template!r}: {exc}") from exc
 services = build_controller_services(settings, version=_VERSION)
 proxy_store = services.proxy_store
 manager = services.manager
