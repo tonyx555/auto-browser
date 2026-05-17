@@ -4,6 +4,24 @@ All notable changes to auto-browser are documented here.
 
 ## [Unreleased]
 
+## [1.1.1] — 2026-05-17
+
+### Added
+- Added `.github/FUNDING.yml` wiring GitHub Sponsors.
+- Added `docs/session-isolation-audit.md` documenting per-session isolation across `shared_browser_node` and `docker_ephemeral` modes.
+
+### Changed
+- Renamed the regulated compliance template names to neutral policy presets: `HIPAA`/`PCI-DSS` → `strict`, `SOC2`/`GDPR` → `balanced`. Legacy names still work as deprecated aliases and emit a warning at startup.
+- Promoted read-only harness inspection tools (`harness.list_runs`, `harness.get_status`, `harness.get_trace`) into the default `curated` MCP tool profile so agents can introspect harness state without elevated access. Convergence runs, drift checks, candidate management, and graduation still require `MCP_TOOL_PROFILE=full`.
+- Restored convergence harness positioning in the README as a first-class feature and v1.1.0 release highlight.
+- Simplified compliance-template normalization at controller startup; the preset module is now the single source of truth for validation and alias resolution.
+- Updated `LICENSE` copyright holder to JAI Studios.
+- Moved tip/sponsor pointers from the README body into `TIPS.md` and added the GitHub Sponsors link there.
+- Bumped controller, client, LangChain integration, and browser-node package metadata to `1.1.1`.
+
+### Removed
+- Removed the unused `open` compliance preset that was added during the rename pass; only `strict` and `balanced` remain.
+
 ## [1.1.0] — 2026-05-09
 
 ### Added
