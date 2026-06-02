@@ -30,6 +30,7 @@ for env_name, relative_path in {
     os.environ.setdefault(env_name, str(_TEST_ROOT / relative_path))
 
 import app.main as main_module
+from app.middleware.http import install_controller_http_middleware
 
 
 class MainAuthTests(unittest.TestCase):
@@ -75,6 +76,28 @@ class MainAuthTests(unittest.TestCase):
 
     def test_missing_or_invalid_bearer_token_returns_401(self) -> None:
         response = self.client.get("/sessions")
+
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.headers["WWW-Authenticate"], "Bearer")
+
+    def test_crafted_host_header_cannot_bypass_bearer_auth(self) -> None:
+        app = FastAPI()
+        metrics = SimpleNamespace(enabled=False)
+        settings = SimpleNamespace(
+            api_bearer_token="secret",
+            request_rate_limit_exempt_path_list=[],
+            operator_id_header="X-Operator-Id",
+            operator_name_header="X-Operator-Name",
+            require_operator_id=False,
+        )
+        install_controller_http_middleware(app, settings=settings, rate_limiter=None, metrics=metrics)
+
+        @app.get("/sessions")
+        async def protected() -> dict[str, bool]:
+            return {"ok": True}
+
+        with TestClient(app) as client:
+            response = client.get("/sessions", headers={"Host": "example.com/healthz?x="})
 
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.headers["WWW-Authenticate"], "Bearer")

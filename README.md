@@ -29,13 +29,13 @@ Works with:
 - **Safety rails built in.** Approvals, operator identity, PII scrubbing, Witness receipts, and policy presets are all part of the product surface.
 - **Governed skill induction.** Verified browser traces can become staged skill candidates with signed provenance, verifier adapters, and review-only graduation — agents that prove they can repeat themselves correctly, not just act once.
 
-## Release Highlights (v1.1.0)
+## Release Highlights (v1.1.2)
 
-- **Modular controller architecture** splits the app factory, routers, middleware, browser services, action pipeline, and MCP tool packs without changing the public API.
-- **Agent skill induction foundation** ships the governed Stage 0 harness: contracts, tamper-checked traces, verifier adapters, staged skill candidates, signed provenance, and review-only graduation.
-- **MCP-native operations** add tool annotations, resource listing/subscriptions, harness candidate tools, per-tool metrics, and response metadata for better agent planning.
-- **Skill drift monitoring** lets operators re-check staged skills and mark degraded candidates when their verifier no longer passes.
-- **Release-grade hardening** improves route failure logging, tool descriptor caching, deep health packaging, router startup behavior, and artifact path trust.
+- **Controller auth hardening** uses ASGI request scope paths for security decisions and requires controller Host validation in production.
+- **Dependency security refresh** moves to FastAPI 0.136.3 and Starlette 1.0.1 to clear the current Starlette path-confusion advisory.
+- **Release gates in CI** now enforce dependency audits, fixture evals, client tests, Python wheel builds, and the 80% controller coverage gate.
+- **Reproducible browser-node builds** use the committed npm lockfile with `npm ci`.
+- **Benchmark and contributor lanes** are tracked explicitly so community work maps to release-critical proof instead of loose placeholders.
 
 See [CHANGELOG.md](./CHANGELOG.md) for the full release history.
 

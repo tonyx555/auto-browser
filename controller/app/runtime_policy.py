@@ -161,9 +161,7 @@ def validate_runtime_policy(settings: Settings) -> RuntimePolicyReport:
         report.errors.append("REQUEST_RATE_LIMIT_MAX_BUCKETS must be positive")
 
     if not settings.controller_allowed_host_patterns:
-        report.warnings.append(
-            "CONTROLLER_ALLOWED_HOSTS is unset; rely on a trusted gateway/private bind or configure Host header validation"
-        )
+        report.errors.append("CONTROLLER_ALLOWED_HOSTS is required when APP_ENV=production")
 
     if "*" in settings.allowed_host_patterns:
         report.errors.append("ALLOWED_HOSTS=* is not permitted when APP_ENV=production")

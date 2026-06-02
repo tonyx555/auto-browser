@@ -1,5 +1,5 @@
 # Online-Mind2Web
 
-Placeholder for the Stage 1 online task slice.
+This lane is reserved for the Stage 1 live-browser task slice.
 
-This benchmark should be wired after the Stage 0 harness proves convergence on the smaller WebArena slice.
+`stage1-manifest.json` records the scoring prerequisites. It must stay unscored until the Stage 0 fixture and WebArena-style contracts are deterministic and the task subset/source revision are pinned.

@@ -71,6 +71,7 @@ class RuntimePolicyTests(unittest.TestCase):
             report.errors,
         )
         self.assertIn("REQUEST_RATE_LIMIT_ENABLED=true is required when APP_ENV=production", report.errors)
+        self.assertIn("CONTROLLER_ALLOWED_HOSTS is required when APP_ENV=production", report.errors)
         self.assertIn("ALLOWED_HOSTS=* is not permitted when APP_ENV=production", report.errors)
 
     def test_production_emits_operational_warnings(self) -> None:
@@ -98,7 +99,7 @@ class RuntimePolicyTests(unittest.TestCase):
         self.assertTrue(any("TAKEOVER_URL" in warning for warning in report.warnings))
         self.assertTrue(any("METRICS_ENABLED" in warning for warning in report.warnings))
 
-    def test_production_warns_when_controller_host_filter_is_unset(self) -> None:
+    def test_production_requires_controller_host_filter(self) -> None:
         settings = Settings(
             _env_file=None,
             APP_ENV="production",
@@ -111,8 +112,8 @@ class RuntimePolicyTests(unittest.TestCase):
 
         report = validate_runtime_policy(settings)
 
-        self.assertTrue(report.ok)
-        self.assertTrue(any("CONTROLLER_ALLOWED_HOSTS is unset" in warning for warning in report.warnings))
+        self.assertFalse(report.ok)
+        self.assertIn("CONTROLLER_ALLOWED_HOSTS is required when APP_ENV=production", report.errors)
 
     def test_production_warns_on_stealth(self) -> None:
         settings = Settings(
@@ -123,6 +124,7 @@ class RuntimePolicyTests(unittest.TestCase):
             AUTH_STATE_ENCRYPTION_KEY="b" * 44,
             REQUIRE_AUTH_STATE_ENCRYPTION="true",
             ALLOWED_HOSTS="example.com",
+            CONTROLLER_ALLOWED_HOSTS="controller.example.com",
             STEALTH_ENABLED="true",
         )
 
@@ -139,6 +141,8 @@ class RuntimePolicyTests(unittest.TestCase):
             REQUIRE_OPERATOR_ID="true",
             AUTH_STATE_ENCRYPTION_KEY="b" * 44,
             REQUIRE_AUTH_STATE_ENCRYPTION="false",
+            ALLOWED_HOSTS="example.com",
+            CONTROLLER_ALLOWED_HOSTS="controller.example.com",
             SESSION_ISOLATION_MODE="shared_browser_node",
             WITNESS_PROTECTION_MODE_DEFAULT="confidential",
         )
@@ -156,6 +160,7 @@ class RuntimePolicyTests(unittest.TestCase):
             AUTH_STATE_ENCRYPTION_KEY="b" * 44,
             REQUIRE_AUTH_STATE_ENCRYPTION="true",
             ALLOWED_HOSTS="example.com",
+            CONTROLLER_ALLOWED_HOSTS="controller.example.com",
             WITNESS_PROTECTION_MODE_DEFAULT="confidential",
             WITNESS_REMOTE_REQUIRED_FOR_CONFIDENTIAL="true",
         )
@@ -174,6 +179,7 @@ class RuntimePolicyTests(unittest.TestCase):
             AUTH_STATE_ENCRYPTION_KEY="b" * 44,
             REQUIRE_AUTH_STATE_ENCRYPTION="true",
             ALLOWED_HOSTS="example.com",
+            CONTROLLER_ALLOWED_HOSTS="controller.example.com",
             WITNESS_REMOTE_REQUIRED_FOR_CONFIDENTIAL="true",
         )
 
@@ -190,6 +196,8 @@ class RuntimePolicyTests(unittest.TestCase):
             REQUIRE_OPERATOR_ID="true",
             AUTH_STATE_ENCRYPTION_KEY="b" * 44,
             REQUIRE_AUTH_STATE_ENCRYPTION="true",
+            ALLOWED_HOSTS="example.com",
+            CONTROLLER_ALLOWED_HOSTS="controller.example.com",
             OPENAI_AUTH_MODE="bogus",
         )
 
@@ -208,6 +216,7 @@ class RuntimePolicyTests(unittest.TestCase):
                 AUTH_STATE_ENCRYPTION_KEY="b" * 44,
                 REQUIRE_AUTH_STATE_ENCRYPTION="true",
                 ALLOWED_HOSTS="example.com",
+                CONTROLLER_ALLOWED_HOSTS="controller.example.com",
                 OPENAI_AUTH_MODE="cli",
                 OPENAI_CLI_PATH="codex",
                 CLI_HOME=tempdir,
@@ -233,6 +242,7 @@ class RuntimePolicyTests(unittest.TestCase):
                 AUTH_STATE_ENCRYPTION_KEY="b" * 44,
                 REQUIRE_AUTH_STATE_ENCRYPTION="true",
                 ALLOWED_HOSTS="example.com",
+                CONTROLLER_ALLOWED_HOSTS="controller.example.com",
                 OPENAI_AUTH_MODE="cli",
                 OPENAI_CLI_PATH="codex",
                 CLI_HOME=tempdir,
@@ -257,6 +267,7 @@ class RuntimePolicyTests(unittest.TestCase):
                 AUTH_STATE_ENCRYPTION_KEY="b" * 44,
                 REQUIRE_AUTH_STATE_ENCRYPTION="true",
                 ALLOWED_HOSTS="example.com",
+                CONTROLLER_ALLOWED_HOSTS="controller.example.com",
                 OPENAI_AUTH_MODE="host_bridge",
                 OPENAI_HOST_BRIDGE_SOCKET=str(socket_path),
             )

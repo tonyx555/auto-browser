@@ -29,8 +29,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /opt/browser-node
 
-COPY package.json ./
-RUN npm install --no-audit --no-fund \
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev --no-audit --no-fund \
   && npx playwright install chromium
 
 COPY entrypoint.sh /entrypoint.sh

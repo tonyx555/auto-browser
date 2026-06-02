@@ -4,6 +4,25 @@ All notable changes to auto-browser are documented here.
 
 ## [Unreleased]
 
+## [1.1.2] — 2026-06-02
+
+### Added
+- Added regression coverage for Host-header path confusion so crafted Host values cannot bypass bearer-token checks.
+- Added CI gates for Python dependency audits, browser-node npm audits, fixture eval validation, client tests, and Python wheel builds.
+- Added CodeQL and Dependabot workflow configuration for recurring security coverage.
+- Added concrete benchmark manifest tracking for WebArena-style, Online-Mind2Web-style, and CUAVerifier regression lanes.
+
+### Changed
+- Bumped controller, client, LangChain integration, and browser-node package metadata to `1.1.2`.
+- Upgraded FastAPI to `0.136.3` and Starlette to `1.0.1`.
+- Made `CONTROLLER_ALLOWED_HOSTS` a production startup requirement instead of a warning.
+- Raised the controller CI coverage gate from 65% to the release-audit 80% threshold.
+- Switched the browser-node Docker build to `npm ci` against the committed lockfile.
+
+### Fixed
+- Fixed bearer-token, rate-limit, operator-identity, and metrics middleware path handling to use ASGI scope paths instead of reconstructed URL paths.
+- Fixed stale `v1.1.0` release-facing version strings in dashboard, webhook user-agent, README, launch notes, and good-first-issue docs.
+
 ## [1.1.1] — 2026-05-17
 
 ### Added

@@ -20,7 +20,7 @@ def install_controller_http_middleware(
 ) -> None:
     @application.middleware("http")
     async def require_api_bearer_token(request: Request, call_next):
-        path = request.url.path
+        path = _request_path(request)
         if not settings.api_bearer_token or _is_bearer_token_exempt_path(path):
             return await call_next(request)
 
@@ -36,7 +36,8 @@ def install_controller_http_middleware(
 
     @application.middleware("http")
     async def enforce_rate_limits(request: Request, call_next):
-        if rate_limiter is None or is_exempt_path(request.url.path, settings.request_rate_limit_exempt_path_list):
+        path = _request_path(request)
+        if rate_limiter is None or is_exempt_path(path, settings.request_rate_limit_exempt_path_list):
             return await call_next(request)
 
         decision = await rate_limiter.evaluate(
@@ -70,7 +71,7 @@ def install_controller_http_middleware(
 
     @application.middleware("http")
     async def bind_operator_identity(request: Request, call_next):
-        path = request.url.path
+        path = _request_path(request)
         exempt_prefixes = (
             "/healthz",
             "/readyz",
@@ -112,7 +113,7 @@ def install_controller_http_middleware(
             duration = time.perf_counter() - start
             metrics.record_http_request(
                 method=request.method,
-                path=request.url.path,
+                path=_request_path(request),
                 status_code=500,
                 duration_seconds=duration,
             )
@@ -120,7 +121,7 @@ def install_controller_http_middleware(
 
         duration = time.perf_counter() - start
         route = request.scope.get("route")
-        path = getattr(route, "path", request.url.path)
+        path = getattr(route, "path", None) or _request_path(request)
         metrics.record_http_request(
             method=request.method,
             path=path,
@@ -128,6 +129,10 @@ def install_controller_http_middleware(
             duration_seconds=duration,
         )
         return response
+
+
+def _request_path(request: Request) -> str:
+    return str(request.scope.get("path") or "")
 
 
 def _is_bearer_token_exempt_path(path: str) -> bool:
