@@ -57,6 +57,7 @@ class RuntimePolicyTests(unittest.TestCase):
             _env_file=None,
             APP_ENV="production",
             REQUEST_RATE_LIMIT_ENABLED="false",
+            CONTROLLER_ALLOWED_HOSTS="",
             ALLOWED_HOSTS="*",
         )
 
@@ -108,6 +109,7 @@ class RuntimePolicyTests(unittest.TestCase):
             AUTH_STATE_ENCRYPTION_KEY="b" * 44,
             REQUIRE_AUTH_STATE_ENCRYPTION="true",
             ALLOWED_HOSTS="example.com",
+            CONTROLLER_ALLOWED_HOSTS="",
         )
 
         report = validate_runtime_policy(settings)

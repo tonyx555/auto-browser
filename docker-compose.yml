@@ -32,7 +32,7 @@ services:
         condition: service_healthy
     environment:
       API_BEARER_TOKEN: ${API_BEARER_TOKEN:-}
-      CONTROLLER_ALLOWED_HOSTS: ${CONTROLLER_ALLOWED_HOSTS:-localhost,127.0.0.1,::1}
+      CONTROLLER_ALLOWED_HOSTS: ${CONTROLLER_ALLOWED_HOSTS:-localhost,127.0.0.1,::1,testserver}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
       BROWSER_WS_ENDPOINT_FILE: /data/browser-profile/browser-ws-endpoint.txt
       TAKEOVER_URL: ${TAKEOVER_URL:-http://127.0.0.1:6080/vnc.html?autoconnect=true&resize=scale}
