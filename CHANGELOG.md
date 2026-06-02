@@ -9,7 +9,7 @@ All notable changes to auto-browser are documented here.
 ### Added
 - Added regression coverage for Host-header path confusion so crafted Host values cannot bypass bearer-token checks.
 - Added CI gates for Python dependency audits, browser-node npm audits, fixture eval validation, client tests, and Python wheel builds.
-- Added CodeQL and Dependabot workflow configuration for recurring security coverage.
+- Added Dependabot configuration and CI dependency-audit gates for recurring security coverage.
 - Added concrete benchmark manifest tracking for WebArena-style, Online-Mind2Web-style, and CUAVerifier regression lanes.
 
 ### Changed
