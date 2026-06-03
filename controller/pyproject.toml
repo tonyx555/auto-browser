@@ -14,7 +14,6 @@ Homepage = "https://github.com/LvcidPsyche/auto-browser"
 
 [tool.setuptools.packages.find]
 include = ["app*"]
-exclude = ["app.social*", "app.integrations*"]
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
