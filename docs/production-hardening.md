@@ -37,6 +37,11 @@ Ship Auto Browser as a safe **single-tenant private beta** first, then harden to
 - noVNC must sit behind a real access layer before remote use
 - File + SQLite durability is acceptable for beta, not enough for larger-scale production
 - Social/Veo3 integrations are extracted from the shipped controller package and are not part of the production surface.
+- The dashboard accepts `#token=...` in the URL hash for one-click bookmarkable access.
+  The fragment never reaches server logs, but a bookmarked or history-persisted URL
+  stores the bearer token in the browser profile. On shared or remote machines,
+  enter the token at the prompt instead of bookmarking it, and rotate
+  `API_BEARER_TOKEN` if such a bookmark may have leaked.
 
 ## Acceptance criteria
 

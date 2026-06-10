@@ -4,6 +4,26 @@ All notable changes to auto-browser are documented here.
 
 ## [Unreleased]
 
+## [1.2.0] — 2026-06-10
+
+### Added
+- Added Witness receipt chain verification: `WitnessRecorder.verify` walks a session's full hash chain and reports the first divergent receipt, exposed as `GET /sessions/{session_id}/witness/verify` and the read-only `browser.verify_witness` MCP tool (curated profile). Detects altered, reordered, truncated, and unparseable receipts.
+- Added orphaned-container reaping: `docker_ephemeral` startup now removes session containers labeled `auto-browser.managed=true` that a crashed or killed controller left behind, honoring `ISOLATED_BROWSER_KEEP_CONTAINERS`.
+- Added resource caps for per-session browser containers: `ISOLATED_BROWSER_MEM_LIMIT` (default `4g`), `ISOLATED_BROWSER_PIDS_LIMIT` (default `2048`), and `ISOLATED_BROWSER_CPUS` (default off).
+- Added a Python 3.14 lane to the host-tests CI matrix alongside 3.11.
+- Added a private security-advisory reporting channel to `SECURITY.md` (GitHub private vulnerability reporting is enabled on the repo).
+
+### Changed
+- Unified the stealth user-agent pools: `stealth.fingerprint.CHROME_UA_POOL` (refreshed to Chrome 149, June 2026 stable) is now the single source for both the fingerprint layer and the `USER_AGENT_POOL` config default, which previously shipped a stale Chrome 122–124 list. The fingerprint pool no longer cycles Firefox/Safari UAs on the Chromium engine — an engine/UA mismatch is itself a bot signal.
+- Upgraded pinned dependencies: Playwright 1.56.0 → 1.60.0 (controller and browser-node together, keeping the WS protocol versions aligned), uvicorn 0.35.0 → 0.49.0, APScheduler 3.11.0 → 3.11.2, and raised dev floors for pytest-asyncio (>=1.4.0) and pytest-cov (>=7.1.0). Closes the open Dependabot batch.
+- Refreshed default model IDs: `CLAUDE_MODEL` → `claude-sonnet-4-6`, `OPENAI_MODEL` → `gpt-5-mini`, `GEMINI_MODEL` → `gemini-3.5-flash` (Gemini 2.0-era defaults stopped being served on 2026-06-01).
+- Refreshed `ROADMAP.md` to the v1.2.0 surface (the "Now" section had been frozen at v1.0.5) and corrected the tool count.
+- Documented the dashboard `#token=` URL-hash trade-off in the production hardening guide.
+- Bumped controller, client, LangChain integration, and browser-node package metadata to `1.2.0`, and refreshed release-facing version strings in the dashboard badge, webhook user-agent, README highlights, launch notes, and good-first-issue docs.
+
+### Fixed
+- Fixed silent `except: pass` blocks in cleanup and capture paths (session isolation, network inspector, navigation settle, bot-challenge probe, workflow run listing): failures are now logged with context instead of vanishing. A takeover request that fails after a detected bot challenge now logs a warning. Deliberate recovery cascades (provider decision parsing, event queue removal) were reviewed and left as-is.
+
 ## [1.1.4] — 2026-06-08
 
 ### Changed

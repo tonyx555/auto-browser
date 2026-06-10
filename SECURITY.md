@@ -21,7 +21,13 @@ The following are not considered valid security goals for this project:
 
 ## Reporting
 
-Please report security issues privately to the maintainer before opening a public issue.
+Report security issues privately via GitHub's private vulnerability reporting:
+
+**[Open a private security advisory](https://github.com/LvcidPsyche/auto-browser/security/advisories/new)**
+
+Do not open a public issue for security problems. If you cannot use GitHub
+advisories, open a regular issue saying only "security report — need a private
+channel" with no details, and the maintainer will follow up.
 
 Include:
 - impact

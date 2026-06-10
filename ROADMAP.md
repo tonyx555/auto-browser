@@ -2,14 +2,16 @@
 
 This is the near-term direction for Auto Browser.
 
-## Now (current in v1.0.5)
+## Now (current in v1.2.0)
 
 - stable local-first browser control
 - reusable auth profiles + import/export
 - human takeover via noVNC
 - approvals and audit trails
-- MCP transport + REST API with 30+ tools
-- Docker-based isolated session mode
+- Witness receipts with on-demand hash-chain verification (REST + MCP)
+- MCP transport + REST API with 70+ tools (curated and full profiles)
+- Docker-based isolated session mode with orphan reaping and resource limits
+- Stage 0 convergence harness for governed skill induction
 - CDP connect mode — attach to an existing Chrome
 - Network inspector — request/response capture with PII scrubbing
 - PII scrubbing layer — pixel redaction, console, network (16 pattern classes)
@@ -35,6 +37,8 @@ This is the near-term direction for Auto Browser.
 
 ## Recently Shipped
 
+- v1.2.0 witness chain verification, isolated-container resource limits + orphan reaping, dependency refresh, and unified UA pool
+- v1.1.x policy presets (`strict`/`balanced`), per-session isolation audit + CI smoke, dependency-audit gates, and the 80% coverage gate
 - v1.0.1 security hardening, auth-profile archive fixes, client SDK repair, and dashboard XSS cleanup
 - v1.0.4 governed approval enforcement, default-off social/Veo3 surfaces, default-off stealth, broader eval coverage, and release audit hardening
 - v1.0.5 extracted social/Veo3 from the shipped controller wheel, added fixture evals, and raised controller coverage to 80%

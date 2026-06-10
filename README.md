@@ -29,15 +29,13 @@ Works with:
 - **Safety rails built in.** Approvals, operator identity, PII scrubbing, Witness receipts, and policy presets are all part of the product surface.
 - **Governed skill induction.** Verified browser traces can become staged skill candidates with signed provenance, verifier adapters, and review-only graduation — agents that prove they can repeat themselves correctly, not just act once.
 
-## Release Highlights (v1.1.4)
+## Release Highlights (v1.2.0)
 
-- **v1.1.4 — documentation patch.** Documents the single-writer chain-integrity invariant in the Witness recorder; no functional changes since v1.1.3.
-
-### Since v1.1.3
-- **Background-task reliability** keeps a strong reference to fire-and-forget work — network capture, the on-detach flush, approval webhooks, and post-session curator review — so it can no longer be garbage-collected mid-flight.
-- **Audit attribution fix** stops operator identity from sharing a single mutable default across request contexts.
-- **Leaner controller** removes the previously extracted social/Veo3 modules that were already unwired and excluded from the build.
-- **Release gates in CI** continue to enforce dependency audits, fixture evals, client tests, Python wheel builds, and the 80% controller coverage gate.
+- **Verifiable Witness receipts.** Receipts were always hash-chained at write time; now you can check the chain on demand. `GET /sessions/{id}/witness/verify` and the read-only `browser.verify_witness` MCP tool walk the full chain and report the first divergent receipt if the log was altered, reordered, or truncated.
+- **Sturdier session isolation.** Per-session browser containers now get memory/PID/CPU caps, and the controller reaps containers orphaned by a crash at startup.
+- **Fresh dependency floor.** Playwright 1.60 (controller and browser-node aligned), uvicorn 0.49, and a unified, current user-agent pool replacing the stale Chrome 122-era defaults.
+- **Quieter failure modes.** Cleanup and capture paths that previously swallowed errors now log them with context.
+- **Release gates in CI** continue to enforce dependency audits, fixture evals, client tests, Python wheel builds, and the 80% controller coverage gate — now on Python 3.11 and 3.14.
 
 See [CHANGELOG.md](./CHANGELOG.md) for the full release history.
 
